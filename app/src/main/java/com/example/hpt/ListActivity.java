@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,32 +15,43 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 
 public class ListActivity extends AppCompatActivity {
     ArrayList<PlaylistData> data;
-    ArrayList<PlaylistData> play;
+    String baseUrl = "http://118.47.27.223:8000/";
+    Handler handler = new Handler();
+    String userID;
+    TextView testView;
+    String[] webData;
+    String[] ListData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        this.InitializeData();
 
         Button logout = (Button) findViewById(R.id.logout);
         Button playlist = (Button) findViewById(R.id.playlist);
         Intent getintent = getIntent();
-        play = getintent.getParcelableArrayListExtra("playlist");
-        final ListView PlaylistView = (ListView)findViewById(R.id.listview);
-        final ListViewBtnAdapter PlaylistAdapter = new ListViewBtnAdapter(this, play);
-        PlaylistView.setAdapter(PlaylistAdapter);
+        TextView userIDText = findViewById(R.id.User_id);
+        if(getintent.hasExtra("ID")) {
+            userID = (getintent.getStringExtra("ID"));
+            userIDText.setText(userID);
+        }
+        testView = findViewById(R.id.testText);
 
         playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PlaylistAdapter.getContext().getApplicationContext(), PlaylistActivity.class);
-                intent.putParcelableArrayListExtra("playlist", play);
-                //startActivity(intent);
+                Intent intent = new Intent(ListActivity.this, PlaylistActivity.class);
+                intent.putExtra("ID", "a");
+                startActivity(intent);
             }
         });
 
@@ -50,17 +62,78 @@ public class ListActivity extends AppCompatActivity {
                 finish();
             }
         });
+        this.InitializeData();
+    }
+
+    public void SetListAdapter(){
         ListView listView = (ListView)findViewById(R.id.listview);
         final ListViewBtnAdapter myAdapter = new ListViewBtnAdapter(this,data);
         listView.setAdapter(myAdapter);
-
-
     }
+
 
     public void InitializeData()        {
         data = new ArrayList<PlaylistData>();
-        data.add(new PlaylistData(R.drawable.bono, "가슴","데드리프트"));
-        data.add(new PlaylistData(R.drawable.bono, "팔","팔굽혀펴기"));
-        data.add(new PlaylistData(R.drawable.bono, "다리","스쿼트"));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                request((baseUrl + "List/"+userID));
+            }
+        }).start();
+    }
+
+
+    public void request(String urlStr) {
+        StringBuilder output = new StringBuilder();
+        try {
+            URL url = new URL(urlStr);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            if (conn != null) {
+                conn.setConnectTimeout(10000);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+
+                int resCode = conn.getResponseCode();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line = null;
+                while (true) {
+                    line = reader.readLine();
+                    if (line == null) {
+                        break;
+                    }
+
+                    //output.append(line + "\n");
+                    output.append(line);
+                }
+                reader.close();
+                conn.disconnect();
+            }
+        } catch (Exception ex) {
+            println("\n"+"!\n");
+        }
+
+        println(output.toString());
+    }
+
+    public void println(final String Inputdata) {
+
+        String errorCheck = "\n" + "!\n";
+        if(Inputdata.equals(errorCheck)) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),"잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else {
+            webData = Inputdata.split("<br>");
+            for (final String linedata : webData){
+                ListData = linedata.split("\\|");
+                data.add(new PlaylistData(R.drawable.bono, ListData[1],ListData[0]));
+            }
+            SetListAdapter();
+        }
     }
 }

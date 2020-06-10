@@ -38,9 +38,19 @@ public class LoginActivity extends AppCompatActivity {
         Button SignUpBt = findViewById(R.id.SignUpBt);
         Handler handler = new Handler();
 
+
         LoginBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(LoginText.getText().length() <= 0) {
+                    Toast.makeText(getApplicationContext(), "ID를 입력해 주십시오", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(PasswordText.getText().length() <= 0){
+                    Toast.makeText(getApplicationContext(), "Password를 입력해 주십시오", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -104,7 +114,9 @@ public class LoginActivity extends AppCompatActivity {
         else {
             webData = data.split("\\|");
             if (webData[1].equals(PasswordText.getText().toString())) {
-                startActivity(new Intent(this, ListActivity.class));
+                Intent intent = new Intent(this, ListActivity.class);
+                intent.putExtra("ID", webData[0]);
+                startActivity(intent);
             } else {
                 handler.post(new Runnable() {
                     @Override
