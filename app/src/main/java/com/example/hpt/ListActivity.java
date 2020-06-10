@@ -131,7 +131,7 @@ public class ListActivity extends AppCompatActivity {
             webData = Inputdata.split("<br>");
             for (final String linedata : webData){
                 ListData = linedata.split("\\|");
-                data.add(new PlaylistData(R.drawable.bono, ListData[1],ListData[0]));
+                data.add(new PlaylistData(R.drawable.bono, ListData[0],ListData[1]));
             }
             SetListAdapter();
         }

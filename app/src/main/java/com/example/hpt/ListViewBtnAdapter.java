@@ -2,6 +2,9 @@ package com.example.hpt;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class ListViewBtnAdapter extends BaseAdapter {
@@ -79,14 +86,58 @@ public class ListViewBtnAdapter extends BaseAdapter {
         });
 
         button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                play.add(new PlaylistData(R.drawable.bono, sample.get(position).part, sample.get(position).healthname));
-                Intent intent = new Intent(mContext.getApplicationContext(), ListActivity.class);
-                intent.putParcelableArrayListExtra("playlist", play);
-                mContext.startActivity(intent);
 
-                Toast.makeText(v.getContext(), "재생목록에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onClick(final View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Handler handler = new Handler(Looper.getMainLooper());
+
+                            URL url = new URL("http://118.47.27.223:8000/AddListExer/a/list2/"+healthname.getText());
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            Log.d("확인", "http://118.47.27.223:8000/AddListExer/a/list2/"+healthname.getText());
+                            if (conn != null) {
+                                StringBuilder output = new StringBuilder();
+                                Log.d("확인", "test");
+                                conn.setConnectTimeout(10000);
+                                conn.setRequestMethod("GET");
+                                conn.setDoInput(true);
+                                conn.getResponseCode();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                                String line = null;
+                                while (true) {
+                                    line = reader.readLine();
+                                    if (line == null) {
+                                        break;
+                                    }
+
+                                    //output.append(line + "\n");
+                                    output.append(line);
+                                }
+                                Log.d("확인", "Return Message : " + output);
+                                if(output.toString().equals("!"))
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(v.getContext(), "이미 추가된 운동입니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                else
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(v.getContext(), "재생목록에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            }
+                        } catch (Exception ex) {
+                            Log.d("확인", ex.toString());
+                            //Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).start();
             }
         });
 
