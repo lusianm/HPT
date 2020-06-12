@@ -110,7 +110,7 @@ public class ListActivity extends AppCompatActivity {
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("\n"+"!\n");
+            println("!");
         }
 
         println(output.toString());
@@ -119,7 +119,7 @@ public class ListActivity extends AppCompatActivity {
     public void println(final String Inputdata) {
 
         String errorCheck = "\n" + "!\n";
-        if(Inputdata.equals(errorCheck)) {
+        if(Inputdata.equals("!")) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
