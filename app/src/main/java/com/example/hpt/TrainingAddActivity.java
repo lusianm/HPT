@@ -1,5 +1,6 @@
 package com.example.hpt;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,29 +24,53 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class PlaylistActivity extends AppCompatActivity {
+public class TrainingAddActivity extends AppCompatActivity {
     ArrayList<PlaylistData> playlist = new ArrayList<>();
     String baseUrl = "http://118.47.27.223:8000/";
     Handler handler = new Handler();
+    TextView playlistname;
+    String Healthname;
     String[] webData;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playlist);
-        Button back = (Button) findViewById(R.id.back);
+        setContentView(R.layout.activity_trainingadd);
 
-        this.InitializeData();
+        Button add = (Button)findViewById(R.id.add_playlist);
+        Intent getintent = getIntent();
+        if(getintent.hasExtra("healthname")) {
+            Healthname = (getintent.getStringExtra("healthname"));
+        }
 
-        back.setOnClickListener(new View.OnClickListener() {
+        playlistname = findViewById(R.id.playlistname_traininglistadpater);
+
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(v.getContext(), PlaylistAddActivity.class);
+                startActivityForResult(intent, 1);
             }
         });
+        this.InitializeData();
     }
 
-    public void InitializeData()        {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            finish();
+            startActivity(new Intent(this, TrainingAddActivity.class));
+        }
+    }
+
+    void SetListAdapter(){
+        TraininglistAdapter traininglistAdapter = new TraininglistAdapter(this, playlist);
+        ListView listView = (ListView)findViewById(R.id.listview_trainingadd);
+        listView.setAdapter(traininglistAdapter);
+    }
+
+    public void InitializeData(){
+        playlist = new ArrayList<PlaylistData>();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -54,16 +79,11 @@ public class PlaylistActivity extends AppCompatActivity {
         }).start();
     }
 
-    void SetListAdapter(){
-        ListView listView = (ListView)findViewById(R.id.listview_playlist);
-        final PlaylistAdapter myAdapter = new PlaylistAdapter(this, playlist);
-        listView.setAdapter(myAdapter);
-    }
-
     public void request(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
+
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             if (conn != null) {
                 conn.setConnectTimeout(10000);
@@ -78,8 +98,6 @@ public class PlaylistActivity extends AppCompatActivity {
                     if (line == null) {
                         break;
                     }
-
-                    //output.append(line + "\n");
                     output.append(line);
                 }
                 reader.close();
@@ -94,6 +112,7 @@ public class PlaylistActivity extends AppCompatActivity {
 
     public void println(final String Inputdata) {
         String errorCheck = "\n" + "!\n";
+        Log.d("확인", "Inputdata = " + Inputdata);
         if(Inputdata.equals(errorCheck)) {
             handler.post(new Runnable() {
                 @Override
@@ -111,27 +130,31 @@ public class PlaylistActivity extends AppCompatActivity {
         }
     }
 
-    class PlaylistAdapter extends BaseAdapter {
+    class TraininglistAdapter extends BaseAdapter {
+
         Context mContext = null;
         LayoutInflater mLayoutInflater = null;
+        ArrayList<PlaylistData> list = new ArrayList<>();
 
-        public PlaylistAdapter(Context context, ArrayList<PlaylistData> data) {
+        public TraininglistAdapter(Context context, ArrayList<PlaylistData> data) {
             mContext = context;
-            playlist = data;
+            list = data;
             mLayoutInflater = LayoutInflater.from(mContext);
         }
 
+
         @Override
         public PlaylistData getItem(int position) {
-            return playlist.get(position);
+            return list.get(position);
         }
+
 
         @Override
         public int getCount() {
-            if (playlist == null)
+            if (list == null)
                 return 0;
             else
-                return playlist.size();
+                return list.size();
         }
 
         @Override
@@ -141,20 +164,66 @@ public class PlaylistActivity extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View converView, ViewGroup parent) {
-            View view = mLayoutInflater.inflate(R.layout.listview_playlist, null);
+            View view = mLayoutInflater.inflate(R.layout.listview_btn_traininglist, null);
 
-            final TextView name = (TextView)view.findViewById(R.id.playlistname_playlistadpater);
-            Button remove = (Button)view.findViewById(R.id.remove_playlistadapter);
+            final TextView name = (TextView)view.findViewById(R.id.playlistname_traininglistadpater);
+            Button remove = (Button)view.findViewById(R.id.remove_traininglistadpater);
 
-            name.setText(playlist.get(position).getPlaylistname());
-            Log.d("확인", "getView Return Message : " + playlist.get(position).getPlaylistname());
+            name.setText(list.get(position).getPlaylistname());
 
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    Intent intent = new Intent(v.getContext(), PlayActivity.class);
-                    intent.putExtra("playlistname", name.getText());
-                    mContext.startActivity(intent);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Handler handler = new Handler(Looper.getMainLooper());
+                                URL url = new URL("http://118.47.27.223:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
+                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                Log.d("확인", "http://118.47.27.223:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
+                                if (conn != null) {
+                                    StringBuilder output = new StringBuilder();
+                                    Log.d("확인", "test");
+                                    conn.setConnectTimeout(10000);
+                                    conn.setRequestMethod("GET");
+                                    conn.setDoInput(true);
+                                    conn.getResponseCode();
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                                    String line = null;
+                                    while (true) {
+                                        line = reader.readLine();
+                                        if (line == null) {
+                                            break;
+                                        }
+
+                                        //output.append(line + "\n");
+                                        output.append(line);
+                                    }
+                                    Log.d("확인", "Return Message : " + output);
+                                    if(output.toString().equals("!"))
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(v.getContext(), "재생목록에 이미 존재하는 운동입니다.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    else
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                Toast.makeText(v.getContext(), "재생목록에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                }
+                            } catch (Exception ex) {
+                                Log.d("확인", ex.toString());
+                                //Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
+                            }
+                            finish();
+                        }
+                    }).start();
                 }
             });
 
@@ -192,14 +261,14 @@ public class PlaylistActivity extends AppCompatActivity {
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록이 존재하지않습니다.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                                Toast.makeText(v.getContext(), "재생목록에 존재하지 않는 운동입니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                                     else
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록이 제거되었습니다.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(v.getContext(), "재생목록에서 제거되었습니다.", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                 }
@@ -209,11 +278,12 @@ public class PlaylistActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
+                    finish();
                 }
             });
             return view;
         }
 
     }
-}
 
+}

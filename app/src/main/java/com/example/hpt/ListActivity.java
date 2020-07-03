@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 
 
 public class ListActivity extends AppCompatActivity {
-    ArrayList<PlaylistData> data;
+    ArrayList<TrainingData> data;
     String baseUrl = "http://118.47.27.223:8000/";
     Handler handler = new Handler();
     String userID;
@@ -66,18 +67,18 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void SetListAdapter(){
-        ListView listView = (ListView)findViewById(R.id.listview);
+        ListView listView = (ListView)findViewById(R.id.listview_list);
         final ListViewBtnAdapter myAdapter = new ListViewBtnAdapter(this,data);
         listView.setAdapter(myAdapter);
     }
 
 
     public void InitializeData()        {
-        data = new ArrayList<PlaylistData>();
+        data = new ArrayList<TrainingData>();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "List/"+userID));
+                request((baseUrl + "List/" + userID));
             }
         }).start();
     }
@@ -117,23 +118,98 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void println(final String Inputdata) {
+            if(Inputdata.equals("!")) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),"잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else {
+                webData = Inputdata.split("<br>");
+                for (final String linedata : webData){
+                    ListData = linedata.split("\\|");
+                    data.add(new TrainingData(R.drawable.bono, ListData[0],ListData[1]));
+                }
+                SetListAdapter();
+            }
+    }
 
-        String errorCheck = "\n" + "!\n";
-        if(Inputdata.equals("!")) {
-            handler.post(new Runnable() {
+    class ListViewBtnAdapter extends BaseAdapter {
+        Context mContext = null;
+        LayoutInflater mLayoutInflater = null;
+        ArrayList<TrainingData> sample = new ArrayList<>();
+        public ListViewBtnAdapter(Context context, ArrayList<TrainingData> data) {
+                mContext = context;
+                sample = data;
+                mLayoutInflater = LayoutInflater.from(mContext);
+        }
+
+        public Context getContext() {
+            return mContext;
+        }
+
+        @Override
+        public int getCount() {
+            if (sample == null)
+                return 0;
+            else
+                return sample.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public TrainingData getItem(int position) {
+            return sample.get(position);
+        }
+
+        @Override
+        public View getView(final int position, View converView, ViewGroup parent) {
+            final View view = mLayoutInflater.inflate(R.layout.listview_btn_item, null);
+
+            ImageView image = (ImageView)view.findViewById(R.id.image);
+            final TextView part = (TextView)view.findViewById(R.id.part);
+            final TextView healthname = (TextView)view.findViewById(R.id.healthname);
+            Button button = (Button)view.findViewById(R.id.button);
+
+
+            image.setImageResource(sample.get(position).getImage());
+            part.setText(sample.get(position).getPart());
+            healthname.setText(sample.get(position).getHealthname());
+
+            part.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(),"잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    v.getContext().startActivity(intent);
                 }
             });
+
+            healthname.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    v.getContext().startActivity(intent);
+                }
+            });
+
+            button.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(final View v) {
+                    Intent intent = new Intent(v.getContext(), TrainingAddActivity.class);
+                    intent.putExtra("healthname", healthname.getText());
+                    mContext.startActivity(intent);
+                }
+            });
+
+            return view;
         }
-        else {
-            webData = Inputdata.split("<br>");
-            for (final String linedata : webData){
-                ListData = linedata.split("\\|");
-                data.add(new PlaylistData(R.drawable.bono, ListData[0],ListData[1]));
-            }
-            SetListAdapter();
-        }
+
     }
 }

@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class ListViewBtnAdapter extends BaseAdapter {
-
     Context mContext = null;
     LayoutInflater mLayoutInflater = null;
     ArrayList<PlaylistData> sample = new ArrayList<>();
@@ -63,7 +62,6 @@ public class ListViewBtnAdapter extends BaseAdapter {
         final TextView part = (TextView)view.findViewById(R.id.part);
         final TextView healthname = (TextView)view.findViewById(R.id.healthname);
         Button button = (Button)view.findViewById(R.id.button);
-
 
         image.setImageResource(sample.get(position).getImage());
         part.setText(sample.get(position).getPart());
@@ -117,6 +115,7 @@ public class ListViewBtnAdapter extends BaseAdapter {
                                     output.append(line);
                                 }
                                 Log.d("확인", "Return Message : " + output);
+
                                 if(output.toString().equals("!"))
                                     handler.post(new Runnable() {
                                         @Override
@@ -140,8 +139,6 @@ public class ListViewBtnAdapter extends BaseAdapter {
                 }).start();
             }
         });
-
         return view;
     }
-
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,47 +24,47 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class PlaylistActivity extends AppCompatActivity {
-    ArrayList<PlaylistData> playlist = new ArrayList<>();
+public class PlayActivity extends AppCompatActivity {
+    ArrayList<TrainingData> data;
     String baseUrl = "http://118.47.27.223:8000/";
     Handler handler = new Handler();
+    String playlistname;
     String[] webData;
-
+    String[] ListData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent getintent = getIntent();
+        if(getintent.hasExtra("playlistname")) {
+            playlistname = (getintent.getStringExtra("playlistname"));
+        }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playlist);
-        Button back = (Button) findViewById(R.id.back);
-
+        setContentView(R.layout.activity_traininglist);
         this.InitializeData();
-
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
+    public void SetListAdapter(){
+        ListView listView = (ListView)findViewById(R.id.listview_traininglist);
+        final PlayAdapter myAdapter = new PlayAdapter(this,data);
+        listView.setAdapter(myAdapter);
+    }
+
+
     public void InitializeData()        {
+        data = new ArrayList<TrainingData>();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "UserList/a"));
+                request((baseUrl + "UserListElement/a/" + playlistname));
             }
         }).start();
     }
 
-    void SetListAdapter(){
-        ListView listView = (ListView)findViewById(R.id.listview_playlist);
-        final PlaylistAdapter myAdapter = new PlaylistAdapter(this, playlist);
-        listView.setAdapter(myAdapter);
-    }
 
     public void request(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
+
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             if (conn != null) {
                 conn.setConnectTimeout(10000);
@@ -86,15 +87,13 @@ public class PlaylistActivity extends AppCompatActivity {
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("\n"+"!\n");
+            println("!");
         }
-
         println(output.toString());
     }
 
     public void println(final String Inputdata) {
-        String errorCheck = "\n" + "!\n";
-        if(Inputdata.equals(errorCheck)) {
+        if(Inputdata.equals("!")) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -105,33 +104,34 @@ public class PlaylistActivity extends AppCompatActivity {
         else {
             webData = Inputdata.split("<br>");
             for (final String linedata : webData){
-                playlist.add(new PlaylistData(linedata));
+                ListData = linedata.split("\\|");
+                data.add(new TrainingData(R.drawable.bono, ListData[0],ListData[1]));
             }
             SetListAdapter();
         }
     }
 
-    class PlaylistAdapter extends BaseAdapter {
+    class PlayAdapter extends BaseAdapter {
         Context mContext = null;
         LayoutInflater mLayoutInflater = null;
-
-        public PlaylistAdapter(Context context, ArrayList<PlaylistData> data) {
+        ArrayList<TrainingData> sample = new ArrayList<>();
+        public PlayAdapter(Context context, ArrayList<TrainingData> data) {
             mContext = context;
-            playlist = data;
+            sample = data;
             mLayoutInflater = LayoutInflater.from(mContext);
+
         }
 
-        @Override
-        public PlaylistData getItem(int position) {
-            return playlist.get(position);
+        public Context getContext() {
+            return mContext;
         }
 
         @Override
         public int getCount() {
-            if (playlist == null)
+            if (sample == null)
                 return 0;
             else
-                return playlist.size();
+                return sample.size();
         }
 
         @Override
@@ -140,25 +140,41 @@ public class PlaylistActivity extends AppCompatActivity {
         }
 
         @Override
+        public TrainingData getItem(int position) {
+            return sample.get(position);
+        }
+
+        @Override
         public View getView(final int position, View converView, ViewGroup parent) {
-            View view = mLayoutInflater.inflate(R.layout.listview_playlist, null);
+            final View view = mLayoutInflater.inflate(R.layout.listview_btn_item, null);
 
-            final TextView name = (TextView)view.findViewById(R.id.playlistname_playlistadpater);
-            Button remove = (Button)view.findViewById(R.id.remove_playlistadapter);
+            ImageView image = (ImageView)view.findViewById(R.id.image);
+            final TextView part = (TextView)view.findViewById(R.id.part);
+            final TextView healthname = (TextView)view.findViewById(R.id.healthname);
+            Button button = (Button)view.findViewById(R.id.button);
 
-            name.setText(playlist.get(position).getPlaylistname());
-            Log.d("확인", "getView Return Message : " + playlist.get(position).getPlaylistname());
 
-            name.setOnClickListener(new View.OnClickListener() {
+            image.setImageResource(sample.get(position).getImage());
+            part.setText(sample.get(position).getPart());
+            healthname.setText(sample.get(position).getHealthname());
+
+            part.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(final View v) {
-                    Intent intent = new Intent(v.getContext(), PlayActivity.class);
-                    intent.putExtra("playlistname", name.getText());
-                    mContext.startActivity(intent);
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    v.getContext().startActivity(intent);
                 }
             });
 
-            remove.setOnClickListener(new View.OnClickListener() {
+            healthname.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    v.getContext().startActivity(intent);
+                }
+            });
+
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
                     new Thread(new Runnable() {
@@ -166,9 +182,9 @@ public class PlaylistActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://118.47.27.223:8000/DeleteList/a/" + name.getText());
+                                URL url = new URL("http://118.47.27.223:8000/DeleteListExer/a/" + playlistname + "/" + healthname.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://118.47.27.223:8000/DeleteList/a/" + name.getText());
+                                Log.d("확인", "http://118.47.27.223:8000/DeleteListExer/a/" + playlistname + "/" + healthname.getText());
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");
@@ -192,14 +208,15 @@ public class PlaylistActivity extends AppCompatActivity {
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록이 존재하지않습니다.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(v.getContext(), "재생목록에 존재하지 않는 운동입니다.", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     else
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록이 제거되었습니다.", Toast.LENGTH_SHORT).show();
+
+                                                Toast.makeText(v.getContext(), "재생목록에서 제거되었습니다.", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                 }
@@ -211,9 +228,9 @@ public class PlaylistActivity extends AppCompatActivity {
                     }).start();
                 }
             });
+
             return view;
         }
 
     }
 }
-

@@ -2,26 +2,16 @@ package com.example.hpt;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.Button;
-
-import java.util.ArrayList;
 
 public class PlaylistData implements Parcelable {
-    int image;
-    String part;
-    String healthname;
-    Button button;
+    String playlistname;
 
-    public PlaylistData(int image, String part, String healthname){
-        this.image = image;
-        this.part = part;
-        this.healthname = healthname;
+    public PlaylistData(String playlistname){
+        this.playlistname = playlistname;
     }
 
     protected PlaylistData(Parcel in) {
-        image = in.readInt();
-        part = in.readString();
-        healthname = in.readString();
+        playlistname = in.readString();
     }
 
     public static final Creator<PlaylistData> CREATOR = new Creator<PlaylistData>() {
@@ -36,16 +26,8 @@ public class PlaylistData implements Parcelable {
         }
     };
 
-    public int getImage() {
-        return this.image;
-    }
-
-    public String getPart() {
-        return this.part;
-    }
-
-    public String getHealthname() {
-        return this.healthname;
+    public String getPlaylistname() {
+        return this.playlistname;
     }
 
     @Override
@@ -55,8 +37,6 @@ public class PlaylistData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.image);
-        dest.writeString(this.part);
-        dest.writeString(this.healthname);
+        dest.writeString(this.playlistname);
     }
 }
