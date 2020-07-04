@@ -8,8 +8,7 @@ android:orientation="vertical">
 <kr.co.prnd.YouTubePlayerView
     android:id="@+id/you_tube_player_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:videoId="zr_gHTbiIbc" />
+    android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/part"

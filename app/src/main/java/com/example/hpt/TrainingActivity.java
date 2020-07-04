@@ -7,13 +7,12 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import kr.co.prnd.YouTubePlayerView;
 
 public class TrainingActivity extends AppCompatActivity {
     TextView part;
@@ -21,6 +20,7 @@ public class TrainingActivity extends AppCompatActivity {
     String baseUrl = "http://39.118.94.200:8000/";
     String userID;
     String healthName;
+    String VIDEO_ID = "ByOn66R9-pE";
     Handler handler = new Handler();
     String[] webData;
 
@@ -36,8 +36,7 @@ public class TrainingActivity extends AppCompatActivity {
         healthnameView=(TextView) findViewById(R.id.healthname);
         healthnameView.setText(intent.getStringExtra("healthname"));
         TextView healthExplain = findViewById(R.id.explain);
-            healthExplain.setText(userID);
-
+        healthExplain.setText(userID);
 
         //서버 요청을 위한 Thread 시작
         new Thread(new Runnable() {
@@ -47,6 +46,10 @@ public class TrainingActivity extends AppCompatActivity {
                 requestServer((baseUrl + "Exercise/" + healthName + "/" + userID));
             }
         }).start();
+
+        YouTubePlayerView youTubePlayerView = findViewById(R.id.you_tube_player_view);
+        youTubePlayerView.play("ByOn66R9-pE", null);
+
 
 //        if(healthname.getText().equals("크런치")) {
 //            healthExplain.setText("복직근 중 상부를 강화하는 운동이다.");
@@ -145,7 +148,9 @@ public class TrainingActivity extends AppCompatActivity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),Inputdata, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), Inputdata, Toast.LENGTH_SHORT).show();
+                    TextView healthExplain = findViewById(R.id.explain);
+                    healthExplain.setText(Inputdata);
                 }
             });
             webData = Inputdata.split("\\|");
