@@ -27,6 +27,7 @@ public class PlaylistActivity extends AppCompatActivity {
     ArrayList<PlaylistData> playlist = new ArrayList<>();
     String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
+    String userID;
     String[] webData;
 
     @Override
@@ -35,6 +36,7 @@ public class PlaylistActivity extends AppCompatActivity {
         setContentView(R.layout.activity_playlist);
         Button back = (Button) findViewById(R.id.back);
 
+        userID = (getIntent().getStringExtra("ID"));
         this.InitializeData();
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +51,7 @@ public class PlaylistActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "UserList/a"));
+                request((baseUrl + "UserList/" + userID));
             }
         }).start();
     }
@@ -154,6 +156,7 @@ public class PlaylistActivity extends AppCompatActivity {
                 public void onClick(final View v) {
                     Intent intent = new Intent(v.getContext(), PlayActivity.class);
                     intent.putExtra("playlistname", name.getText());
+                    intent.putExtra("ID", userID);
                     mContext.startActivity(intent);
                 }
             });

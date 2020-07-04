@@ -52,7 +52,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ListActivity.this, PlaylistActivity.class);
-                intent.putExtra("ID", "a");
+                intent.putExtra("ID", userID);
                 startActivity(intent);
             }
         });
@@ -187,6 +187,8 @@ public class ListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    intent.putExtra("healthname", healthname.getText());
+                    intent.putExtra("ID",userID);
                     v.getContext().startActivity(intent);
                 }
             });
@@ -195,6 +197,8 @@ public class ListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    intent.putExtra("healthname", healthname.getText());
+                    intent.putExtra("ID",userID);
                     v.getContext().startActivity(intent);
                 }
             });
@@ -205,6 +209,7 @@ public class ListActivity extends AppCompatActivity {
                 public void onClick(final View v) {
                     Intent intent = new Intent(v.getContext(), TrainingAddActivity.class);
                     intent.putExtra("healthname", healthname.getText());
+                    intent.putExtra("ID",userID);
                     mContext.startActivity(intent);
                 }
             });

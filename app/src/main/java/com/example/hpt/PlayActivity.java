@@ -29,6 +29,7 @@ public class PlayActivity extends AppCompatActivity {
     //String baseUrl = "http://118.47.27.223:8000/";
     String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
+    String userID;
     String playlistname;
     String[] webData;
     String[] ListData;
@@ -38,6 +39,7 @@ public class PlayActivity extends AppCompatActivity {
         if(getintent.hasExtra("playlistname")) {
             playlistname = (getintent.getStringExtra("playlistname"));
         }
+        userID = (getintent.getStringExtra("ID"));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_traininglist);
         this.InitializeData();
@@ -163,6 +165,8 @@ public class PlayActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    intent.putExtra("healthname", healthname.getText());
+                    intent.putExtra("ID",userID);
                     v.getContext().startActivity(intent);
                 }
             });
@@ -171,6 +175,8 @@ public class PlayActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), TrainingActivity.class);
+                    intent.putExtra("healthname", healthname.getText());
+                    intent.putExtra("ID",userID);
                     v.getContext().startActivity(intent);
                 }
             });
