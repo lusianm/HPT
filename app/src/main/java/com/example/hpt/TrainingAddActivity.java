@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class TrainingAddActivity extends AppCompatActivity {
     ArrayList<PlaylistData> playlist = new ArrayList<>();
-    String baseUrl = "http://118.47.27.223:8000/";
+    String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
     TextView playlistname;
     String Healthname;
@@ -179,9 +179,9 @@ public class TrainingAddActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://118.47.27.223:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
+                                URL url = new URL("http://39.118.94.200:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://118.47.27.223:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
+                                Log.d("확인", "http://39.118.94.200:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");
@@ -235,9 +235,9 @@ public class TrainingAddActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://118.47.27.223:8000/DeleteList/a/" + name.getText());
+                                URL url = new URL("http://39.118.94.200:8000/DeleteList/a/" + name.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://118.47.27.223:8000/DeleteList/a/" + name.getText());
+                                Log.d("확인", "http://39.118.94.200:8000/DeleteList/a/" + name.getText());
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");

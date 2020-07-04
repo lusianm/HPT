@@ -40,9 +40,9 @@ public class PlaylistAddActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://118.47.27.223:8000/AddList/a/" + playlistname.getText());
+                                URL url = new URL("http://39.118.94.200:8000/AddList/a/" + playlistname.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://118.47.27.223:8000/AddList/a/" + playlistname.getText());
+                                Log.d("확인", "http://39.118.94.200:8000/AddList/a/" + playlistname.getText());
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");

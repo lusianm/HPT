@@ -26,7 +26,8 @@ import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
     ArrayList<TrainingData> data;
-    String baseUrl = "http://118.47.27.223:8000/";
+    //String baseUrl = "http://118.47.27.223:8000/";
+    String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
     String userID;
     TextView testView;

@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class SignUPActivity  extends AppCompatActivity {
-    String baseUrl = "http://118.47.27.223:8000/";
+    String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
     TextView iDtxt;
     TextView pWtxt;

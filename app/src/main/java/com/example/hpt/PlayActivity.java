@@ -26,7 +26,8 @@ import java.util.ArrayList;
 
 public class PlayActivity extends AppCompatActivity {
     ArrayList<TrainingData> data;
-    String baseUrl = "http://118.47.27.223:8000/";
+    //String baseUrl = "http://118.47.27.223:8000/";
+    String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
     String playlistname;
     String[] webData;
@@ -182,9 +183,9 @@ public class PlayActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://118.47.27.223:8000/DeleteListExer/a/" + playlistname + "/" + healthname.getText());
+                                URL url = new URL("http://39.118.94.200:8000/DeleteListExer/a/" + playlistname + "/" + healthname.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://118.47.27.223:8000/DeleteListExer/a/" + playlistname + "/" + healthname.getText());
+                                Log.d("확인", "http://39.118.94.200:8000/DeleteListExer/a/" + playlistname + "/" + healthname.getText());
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");
