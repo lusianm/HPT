@@ -23,7 +23,7 @@ import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
     String[] webData;
-    String baseUrl = "http://118.47.27.223:8000/";
+    String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
     EditText LoginText;
     EditText PasswordText;
