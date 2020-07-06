@@ -108,7 +108,55 @@ public class PlayActivity extends AppCompatActivity {
             webData = Inputdata.split("<br>");
             for (final String linedata : webData){
                 ListData = linedata.split("\\|");
-                data.add(new TrainingData(R.drawable.bono, ListData[0],ListData[1]));
+                if(ListData[1].equals("니 푸쉬업")) {
+                    data.add(new TrainingData(R.drawable.pt1, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("인클라인 푸시업")) {
+                    data.add(new TrainingData(R.drawable.pt2, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("디클라인 푸시업")) {
+                    data.add(new TrainingData(R.drawable.pt3, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("와이드 푸시업")) {
+                    data.add(new TrainingData(R.drawable.pt4, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("티 푸시업")) {
+                    data.add(new TrainingData(R.drawable.pt5, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("런지")) {
+                    data.add(new TrainingData(R.drawable.pt6, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("제자리달리기")) {
+                    data.add(new TrainingData(R.drawable.pt7, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("내로우스쿼트")) {
+                    data.add(new TrainingData(R.drawable.pt8, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("와이드 스쿼트")) {
+                    data.add(new TrainingData(R.drawable.pt9, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("점프 스쿼트")) {
+                    data.add(new TrainingData(R.drawable.pt10, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("팔 벌려 뛰기")) {
+                    data.add(new TrainingData(R.drawable.pt11, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("버피테스트")) {
+                    data.add(new TrainingData(R.drawable.pt12, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("플랭크")) {
+                    data.add(new TrainingData(R.drawable.pt13, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("크런치")) {
+                    data.add(new TrainingData(R.drawable.pt14, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("레그 레이즈")) {
+                    data.add(new TrainingData(R.drawable.pt15, ListData[0],ListData[1]));
+                }
+                else if(ListData[1].equals("싯 업")) {
+                    data.add(new TrainingData(R.drawable.pt16, ListData[0],ListData[1]));
+                }
+                else{}
             }
             SetListAdapter();
         }
