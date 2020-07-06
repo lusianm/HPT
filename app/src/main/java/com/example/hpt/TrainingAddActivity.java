@@ -30,6 +30,7 @@ public class TrainingAddActivity extends AppCompatActivity {
     Handler handler = new Handler();
     TextView playlistname;
     String Healthname;
+    String userID;
     String[] webData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,26 +42,20 @@ public class TrainingAddActivity extends AppCompatActivity {
         if(getintent.hasExtra("healthname")) {
             Healthname = (getintent.getStringExtra("healthname"));
         }
-
+        userID = getintent.getStringExtra("ID");
         playlistname = findViewById(R.id.playlistname_traininglistadpater);
-
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), PlaylistAddActivity.class);
-                startActivityForResult(intent, 1);
+                intent.putExtra("healthname", Healthname);
+                intent.putExtra("ID",userID);
+                finish();
+                startActivity(intent);
             }
         });
-        this.InitializeData();
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            finish();
-            startActivity(new Intent(this, TrainingAddActivity.class));
-        }
+        this.InitializeData();
     }
 
     void SetListAdapter(){
@@ -74,12 +69,12 @@ public class TrainingAddActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "UserList/a"));
+                requestServer((baseUrl + "UserList/" + userID));
             }
         }).start();
     }
 
-    public void request(String urlStr) {
+    public void requestServer(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
@@ -104,13 +99,13 @@ public class TrainingAddActivity extends AppCompatActivity {
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("\n"+"!\n");
+            DataProcessing("\n"+"!\n");
         }
 
-        println(output.toString());
+        DataProcessing(output.toString());
     }
 
-    public void println(final String Inputdata) {
+    public void DataProcessing(final String Inputdata) {
         String errorCheck = "\n" + "!\n";
         Log.d("확인", "Inputdata = " + Inputdata);
         if(Inputdata.equals(errorCheck)) {
@@ -142,12 +137,10 @@ public class TrainingAddActivity extends AppCompatActivity {
             mLayoutInflater = LayoutInflater.from(mContext);
         }
 
-
         @Override
         public PlaylistData getItem(int position) {
             return list.get(position);
         }
-
 
         @Override
         public int getCount() {
@@ -167,7 +160,6 @@ public class TrainingAddActivity extends AppCompatActivity {
             View view = mLayoutInflater.inflate(R.layout.listview_btn_traininglist, null);
 
             final TextView name = (TextView)view.findViewById(R.id.playlistname_traininglistadpater);
-            Button remove = (Button)view.findViewById(R.id.remove_traininglistadpater);
 
             name.setText(list.get(position).getPlaylistname());
 
@@ -179,9 +171,8 @@ public class TrainingAddActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://39.118.94.200:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
+                                URL url = new URL(baseUrl + "AddListExer/" + userID + "/" + name.getText() + "/" + Healthname);
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://39.118.94.200:8000/AddListExer/a/" + name.getText() + "/" + Healthname);
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");
@@ -196,8 +187,6 @@ public class TrainingAddActivity extends AppCompatActivity {
                                         if (line == null) {
                                             break;
                                         }
-
-                                        //output.append(line + "\n");
                                         output.append(line);
                                     }
                                     Log.d("확인", "Return Message : " + output);
@@ -218,67 +207,11 @@ public class TrainingAddActivity extends AppCompatActivity {
                                         });
                                 }
                             } catch (Exception ex) {
-                                Log.d("확인", ex.toString());
-                                //Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
                             }
                             finish();
                         }
                     }).start();
-                }
-            });
-
-            remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://39.118.94.200:8000/DeleteList/a/" + name.getText());
-                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://39.118.94.200:8000/DeleteList/a/" + name.getText());
-                                if (conn != null) {
-                                    StringBuilder output = new StringBuilder();
-                                    Log.d("확인", "test");
-                                    conn.setConnectTimeout(10000);
-                                    conn.setRequestMethod("GET");
-                                    conn.setDoInput(true);
-                                    conn.getResponseCode();
-                                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                                    String line = null;
-                                    while (true) {
-                                        line = reader.readLine();
-                                        if (line == null) {
-                                            break;
-                                        }
-
-                                        //output.append(line + "\n");
-                                        output.append(line);
-                                    }
-                                    Log.d("확인", "Return Message : " + output);
-                                    if(output.toString().equals("!"))
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록에 존재하지 않는 운동입니다.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                                    else
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록에서 제거되었습니다.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                }
-                            } catch (Exception ex) {
-                                Log.d("확인", ex.toString());
-                                //Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }).start();
-                    finish();
                 }
             });
             return view;

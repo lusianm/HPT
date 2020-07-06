@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,16 +36,17 @@ public class PlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
         Button back = (Button) findViewById(R.id.back);
-
         userID = (getIntent().getStringExtra("ID"));
-        this.InitializeData();
-
+        TextView nameText = findViewById(R.id.User_id);
+        nameText.setText(userID);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        this.InitializeData();
+
     }
 
     public void InitializeData()        {
@@ -80,8 +82,6 @@ public class PlaylistActivity extends AppCompatActivity {
                     if (line == null) {
                         break;
                     }
-
-                    //output.append(line + "\n");
                     output.append(line);
                 }
                 reader.close();
@@ -169,9 +169,8 @@ public class PlaylistActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://39.118.94.200:8000/DeleteList/a/" + name.getText());
+                                URL url = new URL(baseUrl + "DeleteList/" + userID + "/" + name.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://39.118.94.200:8000/DeleteList/a/" + name.getText());
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");
@@ -186,8 +185,6 @@ public class PlaylistActivity extends AppCompatActivity {
                                         if (line == null) {
                                             break;
                                         }
-
-                                        //output.append(line + "\n");
                                         output.append(line);
                                     }
                                     Log.d("확인", "Return Message : " + output);
@@ -203,12 +200,15 @@ public class PlaylistActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 Toast.makeText(v.getContext(), "재생목록이 제거되었습니다.", Toast.LENGTH_SHORT).show();
+                                                Intent intent = getIntent();
+                                                intent.putExtra("ID", userID);
+                                                finish();
+                                                startActivity(intent);
                                             }
                                         });
                                 }
                             } catch (Exception ex) {
-                                Log.d("확인", ex.toString());
-                                //Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }).start();

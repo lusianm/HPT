@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
     ArrayList<TrainingData> data;
-    //String baseUrl = "http://118.47.27.223:8000/";
     String baseUrl = "http://39.118.94.200:8000/";
     Handler handler = new Handler();
     String userID;
@@ -64,6 +63,7 @@ public class ListActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         this.InitializeData();
     }
 
@@ -79,13 +79,13 @@ public class ListActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "List/" + userID));
+                requestServer((baseUrl + "List/" + userID));
             }
         }).start();
     }
 
 
-    public void request(String urlStr) {
+    public void requestServer(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
@@ -104,21 +104,19 @@ public class ListActivity extends AppCompatActivity {
                     if (line == null) {
                         break;
                     }
-
-                    //output.append(line + "\n");
                     output.append(line);
                 }
                 reader.close();
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("!");
+            DataProcessing("!");
         }
 
-        println(output.toString());
+        DataProcessing(output.toString());
     }
 
-    public void println(final String Inputdata) {
+    public void DataProcessing(final String Inputdata) {
             if(Inputdata.equals("!")) {
                 handler.post(new Runnable() {
                     @Override
