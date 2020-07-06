@@ -20,10 +20,9 @@ public class TrainingActivity extends AppCompatActivity {
     String baseUrl = "http://39.118.94.200:8000/";
     String userID;
     String healthName;
-    String VIDEO_ID = "ByOn66R9-pE";
+   // String VIDEO_ID = "ByOn66R9-pE";
     Handler handler = new Handler();
     String[] webData;
-    YouTubePlayerView youTubePlayerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,8 @@ public class TrainingActivity extends AppCompatActivity {
             }
         }).start();
 
-        youTubePlayerView = findViewById(R.id.you_tube_player_view);
+        //YouTubePlayerView youTubePlayerView = findViewById(R.id.you_tube_player_view);
+        //youTubePlayerView.play("ByOn66R9-pE", null);
 
 
 //        if(healthname.getText().equals("크런치")) {
@@ -148,18 +148,37 @@ public class TrainingActivity extends AppCompatActivity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), Inputdata, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), Inputdata, Toast.LENGTH_SHORT).show();
+                    TextView part = findViewById(R.id.part);
                     TextView healthExplain = findViewById(R.id.explain);
-                    healthExplain.setText(Inputdata);
+                    YouTubePlayerView youTubePlayerView = findViewById(R.id.you_tube_player_view);
+                    webData = Inputdata.split("\\|");
+                    youTubePlayerView.play(webData[3], null);
+                    part.setText(webData[1]);
+                    healthExplain.setText(webData[2]);
                 }
             });
-            webData = Inputdata.split("\\|");
-
-            youTubePlayerView.play(webData[3], null);
+            //webData = Inputdata.split("\\|");
 
         }
     }
 
+    public void onButtonClicked(View view){
+        part=(TextView) findViewById(R.id.part);
+        healthnameView=(TextView) findViewById(R.id.healthname);
+        TextView healthExplain = findViewById(R.id.explain);
 
+        if(healthnameView.getText().equals("팔 벌려 뛰기")) {
+            healthExplain.setText("차렷 자세에서 두 팔을 양옆으로 올리면서 두 발을 점프하며 벌린다.");
+            Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://peaceful-goldstine-00360f.netlify.app/"));
+            startActivity(intent2);
+        }
+        else if(healthnameView.getText().equals("런지")) {
+            healthExplain.setText("한쪽 발을 뒤쪽으로 뻗은 상태에서, 다른 쪽 발을 앞으로 내밀고 무릎을 굽혀 몸을 앞쪽으로 움직인다.");
+            Intent intent3 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://blissful-hopper-df383b.netlify.app/"));
+            startActivity(intent3);
+        }
+        else{}
+    }
 }
 

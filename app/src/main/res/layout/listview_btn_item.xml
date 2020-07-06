@@ -11,9 +11,13 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="17dp"
+        android:layout_height="55dp"
         android:layout_weight="1.6"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:layout_marginTop="15sp"
+        android:layout_marginBottom="15sp"
         android:gravity="center" />
 
     <TextView
@@ -22,7 +26,7 @@
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
-        android:textSize="12sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/healthname"
@@ -30,13 +34,19 @@
         android:layout_height="match_parent"
         android:layout_weight="4"
         android:gravity="center"
-        android:textSize="12sp" />
+        android:textColor="#FF0000FF"
+        android:textSize="15sp" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center" />
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/plus"
+        android:layout_marginRight="20dp" />
 
 </LinearLayout>
