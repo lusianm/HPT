@@ -50,11 +50,10 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Password를 입력해 주십시오", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        request((baseUrl + "Login/"+LoginText.getText()));
+                        requestServer((baseUrl + "Login/"+LoginText.getText()));
                     }
                 }).start();
             }
@@ -69,39 +68,33 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void request(String urlStr) {
+    public void requestServer(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
-
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             if (conn != null) {
                 conn.setConnectTimeout(10000);
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
-
                 int resCode = conn.getResponseCode();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String line = null;
                 while (true) {
                     line = reader.readLine();
-                    if (line == null) {
-                        break;
-                    }
-
+                    if (line == null) {break;}
                     output.append(line + "\n");
                 }
                 reader.close();
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("\n"+"!\n");
+            DataProcessing("\n"+"!\n");
         }
-
-        println(output.toString());
+        DataProcessing(output.toString());
     }
 
-    public void println(final String data) {
+    public void DataProcessing(final String data) {
         String errorCheck = "\n" + "!\n";
         if(data.equals(errorCheck)) {
             handler.post(new Runnable() {

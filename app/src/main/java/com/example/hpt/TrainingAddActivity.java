@@ -41,9 +41,7 @@ public class TrainingAddActivity extends AppCompatActivity {
         if(getintent.hasExtra("healthname")) {
             Healthname = (getintent.getStringExtra("healthname"));
         }
-
         playlistname = findViewById(R.id.playlistname_traininglistadpater);
-
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,12 +72,12 @@ public class TrainingAddActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "UserList/a"));
+                requestServer((baseUrl + "UserList/a"));
             }
         }).start();
     }
 
-    public void request(String urlStr) {
+    public void requestServer(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
@@ -104,13 +102,13 @@ public class TrainingAddActivity extends AppCompatActivity {
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("\n"+"!\n");
+            DataProcessing("\n"+"!\n");
         }
 
-        println(output.toString());
+        DataProcessing(output.toString());
     }
 
-    public void println(final String Inputdata) {
+    public void DataProcessing(final String Inputdata) {
         String errorCheck = "\n" + "!\n";
         Log.d("확인", "Inputdata = " + Inputdata);
         if(Inputdata.equals(errorCheck)) {

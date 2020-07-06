@@ -23,6 +23,7 @@ public class TrainingActivity extends AppCompatActivity {
     String VIDEO_ID = "ByOn66R9-pE";
     Handler handler = new Handler();
     String[] webData;
+    YouTubePlayerView youTubePlayerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,7 @@ public class TrainingActivity extends AppCompatActivity {
             }
         }).start();
 
-        YouTubePlayerView youTubePlayerView = findViewById(R.id.you_tube_player_view);
-        youTubePlayerView.play("ByOn66R9-pE", null);
+        youTubePlayerView = findViewById(R.id.you_tube_player_view);
 
 
 //        if(healthname.getText().equals("크런치")) {
@@ -154,6 +154,8 @@ public class TrainingActivity extends AppCompatActivity {
                 }
             });
             webData = Inputdata.split("\\|");
+
+            youTubePlayerView.play(webData[3], null);
 
         }
     }

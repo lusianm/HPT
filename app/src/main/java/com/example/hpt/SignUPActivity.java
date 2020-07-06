@@ -60,22 +60,6 @@ public class SignUPActivity  extends AppCompatActivity {
         Button cancleBtn = findViewById(R.id.CancleBtn);
         Button signupBtn = findViewById(R.id.SignUpBtn);
 
-
-        signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int age;
-                        String ageSelected = ageSelect.getSelectedItem().toString();
-                        request((baseUrl + "AddUser/" + iDtxt.getText() + "/" + pWtxt.getText()+ "/" + nametxt.getText() + "/" + ageSelect.getSelectedItem().toString()  + "/" + genderSelect.getSelectedItem().toString() + "/"
-                                + jobtxt.getText() + "/" + heighttxt.getText() + "/" + weighttxt.getText()));
-                    }
-                }).start();
-            }
-        });
-
         cancleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,19 +67,30 @@ public class SignUPActivity  extends AppCompatActivity {
             }
         });
 
+        signupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestServer((baseUrl + "AddUser/" + iDtxt.getText() + "/" + pWtxt.getText()+ "/" + nametxt.getText() + "/" + ageSelect.getSelectedItem().toString()  + "/" + genderSelect.getSelectedItem().toString() + "/"
+                                + jobtxt.getText() + "/" + heighttxt.getText() + "/" + weighttxt.getText()));
+                    }
+                }).start();
+            }
+        });
+
     }
 
-    public void request(String urlStr) {
+    public void requestServer(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
-
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             if (conn != null) {
                 conn.setConnectTimeout(10000);
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
-
                 int resCode = conn.getResponseCode();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String line = null;
@@ -104,20 +99,18 @@ public class SignUPActivity  extends AppCompatActivity {
                     if (line == null) {
                         break;
                     }
-
                     output.append(line + "\n");
                 }
                 reader.close();
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("예외 발생함 : " + ex.toString());
+            DataProcessing("\n"+"!\n");
         }
-
-        println(output.toString());
+        DataProcessing(output.toString());
     }
 
-    public void println(final String data) {
+    public void DataProcessing(final String data) {
         String errorCheck = "\n" + "!\n";
         if(data.equals(errorCheck)) {
             handler.post(new Runnable() {
