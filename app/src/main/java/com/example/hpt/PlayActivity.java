@@ -98,6 +98,7 @@ public class PlayActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(),"잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
         }
