@@ -97,9 +97,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/edge"
             android:gravity="center"
-            android:text="재생목록추가"
-            android:background="@drawable/edge" />
+            android:text="목록에 추가" />
 
 
     </LinearLayout>

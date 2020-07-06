@@ -160,22 +160,6 @@ public class TrainingActivity extends AppCompatActivity {
         }
     }
 
-    public void onButtonClicked(View view){
-        part=(TextView) findViewById(R.id.part);
-        healthnameView=(TextView) findViewById(R.id.healthname);
-        TextView healthExplain = findViewById(R.id.explain);
 
-        if(healthnameView.getText().equals("인클라인 푸시업")) {
-            healthExplain.setText("손바닥을 벤치나 상자에 올려 엎드려뻗친 상태에서 짚은 팔을 굽혔다 폈다 한다.");
-            Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://m.naver.com"));
-            startActivity(intent2);
-        }
-        else if(healthnameView.getText().equals("런지")) {
-            healthExplain.setText("한쪽 발을 뒤쪽으로 뻗은 상태에서, 다른 쪽 발을 앞으로 내밀고 무릎을 굽혀 몸을 앞쪽으로 움직인다.");
-            Intent intent3 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com"));
-            startActivity(intent3);
-        }
-        else{}
-    }
 }
 
