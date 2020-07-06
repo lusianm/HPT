@@ -186,7 +186,7 @@ public class PlayActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL(baseUrl + "DeleteListExer/a/" + playlistname + "/" + healthname.getText());
+                                URL url = new URL(baseUrl + "DeleteListExer/" + userID + "/" + playlistname + "/" + healthname.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
