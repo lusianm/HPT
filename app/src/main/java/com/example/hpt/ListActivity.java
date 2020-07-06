@@ -104,8 +104,6 @@ public class ListActivity extends AppCompatActivity {
                     if (line == null) {
                         break;
                     }
-
-                    //output.append(line + "\n");
                     output.append(line);
                 }
                 reader.close();

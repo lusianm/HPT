@@ -169,9 +169,8 @@ public class PlaylistActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://39.118.94.200:8000/DeleteList/a/" + name.getText());
+                                URL url = new URL(baseUrl + "DeleteList/" +userID+"/" + name.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://39.118.94.200:8000/DeleteList/a/" + name.getText());
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
                                     Log.d("확인", "test");
@@ -186,8 +185,6 @@ public class PlaylistActivity extends AppCompatActivity {
                                         if (line == null) {
                                             break;
                                         }
-
-                                        //output.append(line + "\n");
                                         output.append(line);
                                     }
                                     Log.d("확인", "Return Message : " + output);

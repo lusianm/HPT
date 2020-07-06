@@ -18,6 +18,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class PlaylistAddActivity extends AppCompatActivity {
+    String healthname;
+    String userID;
+    String baseUrl = "http://39.118.94.200:8000/";
+    Handler handler = new Handler(Looper.getMainLooper());
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlistadd);
@@ -25,6 +29,10 @@ public class PlaylistAddActivity extends AppCompatActivity {
         Button ok = (Button) findViewById(R.id.Ok);
         Button cancel =(Button) findViewById(R.id.Cancle);
         final EditText playlistname = (EditText) findViewById(R.id.addplaylist_name);
+
+        Intent getintent = getIntent();
+        healthname = (getintent.getStringExtra("healthname"));
+        userID = getintent.getStringExtra("ID");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,53 +46,9 @@ public class PlaylistAddActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL("http://39.118.94.200:8000/AddList/a/" + playlistname.getText());
-                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                Log.d("확인", "http://39.118.94.200:8000/AddList/a/" + playlistname.getText());
-                                if (conn != null) {
-                                    StringBuilder output = new StringBuilder();
-                                    Log.d("확인", "test");
-                                    conn.setConnectTimeout(10000);
-                                    conn.setRequestMethod("GET");
-                                    conn.setDoInput(true);
-                                    conn.getResponseCode();
-                                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                                    String line = null;
-                                    while (true) {
-                                        line = reader.readLine();
-                                        if (line == null) {
-                                            break;
-                                        }
-                                        //output.append(line + "\n");
-                                        output.append(line);
-                                    }
-                                    if(output.toString().equals("!"))
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(v.getContext(), "이미 추가된 재생목록입니다.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    else
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록이 추가되었습니다.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                }
-                            } catch (Exception ex) {
-                                Log.d("확인", ex.toString());
-                                //Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();
-                            }
+                            requestServer(baseUrl + "AddList/" + userID + "/" + playlistname.getText());
                         }
                     }).start();
-                    Intent result = new Intent();
-                    result.putExtra("인증 결과", "success");
-                    setResult(TrainingAddActivity.RESULT_OK, result);
-                    finish();
                 }
             }
         });
@@ -94,6 +58,59 @@ public class PlaylistAddActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void requestServer(String urlStr) {
+        StringBuilder output = new StringBuilder();
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            if (conn != null) {
+                conn.setConnectTimeout(10000);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+
+                int resCode = conn.getResponseCode();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line = null;
+                while (true) {
+                    line = reader.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    output.append(line);
+                }
+                reader.close();
+                conn.disconnect();
+            }
+        } catch (Exception ex) {
+            DataProcessing("!");
+        }
+        DataProcessing(output.toString());
+    }
+
+    public void DataProcessing(final String Inputdata) {
+        if(Inputdata.equals("!")) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),"이미 추가된 재생목록입니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),"재생목록이 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            Intent intent = new Intent(this, TrainingAddActivity.class);
+            intent.putExtra("healthname", healthname);
+            intent.putExtra("ID",userID);
+            finish();
+            startActivity(intent);
+        }
     }
 
 }
