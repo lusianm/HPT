@@ -26,7 +26,6 @@
         <activity android:name=".PlaylistActivity"></activity>
         <activity android:name=".PlaylistAddActivity"></activity>
         <activity android:name=".TrainingAddActivity"></activity>
-        <activity android:name=".ConfirmActivity"></activity>
     </application>
 
 </manifest>

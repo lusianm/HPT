@@ -56,13 +56,13 @@ public class PlayActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "UserListElement/a/" + playlistname));
+                requestServer((baseUrl + "UserListElement/" + userID + "/" + playlistname));
             }
         }).start();
     }
 
 
-    public void request(String urlStr) {
+    public void requestServer(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
@@ -81,20 +81,18 @@ public class PlayActivity extends AppCompatActivity {
                     if (line == null) {
                         break;
                     }
-
-                    //output.append(line + "\n");
                     output.append(line);
                 }
                 reader.close();
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("!");
+            DataProcessing("!");
         }
-        println(output.toString());
+        DataProcessing(output.toString());
     }
 
-    public void println(final String Inputdata) {
+    public void DataProcessing(final String Inputdata) {
         if(Inputdata.equals("!")) {
             handler.post(new Runnable() {
                 @Override
