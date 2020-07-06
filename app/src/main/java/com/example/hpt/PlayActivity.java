@@ -156,7 +156,13 @@ public class PlayActivity extends AppCompatActivity {
                 }
                 else{}
             }
-            SetListAdapter();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SetListAdapter();
+                }
+            });
         }
     }
 
@@ -264,6 +270,8 @@ public class PlayActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 Toast.makeText(v.getContext(), "재생목록에서 제거되었습니다.", Toast.LENGTH_SHORT).show();
+                                                finish();
+                                                startActivity(getIntent());
                                             }
                                         });
                                 }

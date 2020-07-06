@@ -110,7 +110,13 @@ public class PlaylistActivity extends AppCompatActivity {
             for (final String linedata : webData){
                 playlist.add(new PlaylistData(linedata));
             }
-            SetListAdapter();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SetListAdapter();
+                }
+            });
         }
     }
 
@@ -150,7 +156,6 @@ public class PlaylistActivity extends AppCompatActivity {
             Button remove = (Button)view.findViewById(R.id.remove_playlistadapter);
 
             name.setText(playlist.get(position).getPlaylistname());
-            Log.d("확인", "getView Return Message : " + playlist.get(position).getPlaylistname());
 
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
