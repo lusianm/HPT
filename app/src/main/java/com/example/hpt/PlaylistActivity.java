@@ -53,7 +53,7 @@ public class PlaylistActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request((baseUrl + "UserList/" + userID));
+                requestServer((baseUrl + "UserList/" + userID));
             }
         }).start();
     }
@@ -64,7 +64,7 @@ public class PlaylistActivity extends AppCompatActivity {
         listView.setAdapter(myAdapter);
     }
 
-    public void request(String urlStr) {
+    public void requestServer(String urlStr) {
         StringBuilder output = new StringBuilder();
         try {
             URL url = new URL(urlStr);
@@ -88,19 +88,20 @@ public class PlaylistActivity extends AppCompatActivity {
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            println("\n"+"!\n");
+            DataProcessing("\n"+"!\n");
         }
 
-        println(output.toString());
+        DataProcessing(output.toString());
     }
 
-    public void println(final String Inputdata) {
+    public void DataProcessing(final String Inputdata) {
         String errorCheck = "\n" + "!\n";
         if(Inputdata.equals(errorCheck)) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(),"잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
         }
@@ -109,7 +110,13 @@ public class PlaylistActivity extends AppCompatActivity {
             for (final String linedata : webData){
                 playlist.add(new PlaylistData(linedata));
             }
-            SetListAdapter();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SetListAdapter();
+                }
+            });
         }
     }
 
@@ -149,7 +156,6 @@ public class PlaylistActivity extends AppCompatActivity {
             Button remove = (Button)view.findViewById(R.id.remove_playlistadapter);
 
             name.setText(playlist.get(position).getPlaylistname());
-            Log.d("확인", "getView Return Message : " + playlist.get(position).getPlaylistname());
 
             name.setOnClickListener(new View.OnClickListener() {
                 @Override

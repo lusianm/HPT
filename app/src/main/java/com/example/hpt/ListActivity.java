@@ -182,7 +182,13 @@ public class ListActivity extends AppCompatActivity {
 
 
                 }
-                SetListAdapter();
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        SetListAdapter();
+                    }
+                });
             }
     }
 

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(new Intent(this, LoginActivity.class));
 
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("ID", "a");
+        //intent.putExtra("ID", "a");
         startActivity(intent);
     }
 }

@@ -98,6 +98,7 @@ public class PlayActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(),"잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
         }
@@ -155,7 +156,13 @@ public class PlayActivity extends AppCompatActivity {
                 }
                 else{}
             }
-            SetListAdapter();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SetListAdapter();
+                }
+            });
         }
     }
 
@@ -234,7 +241,7 @@ public class PlayActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                URL url = new URL(baseUrl + "DeleteListExer/a/" + playlistname + "/" + healthname.getText());
+                                URL url = new URL(baseUrl + "DeleteListExer/" + userID + "/" + playlistname + "/" + healthname.getText());
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                                 if (conn != null) {
                                     StringBuilder output = new StringBuilder();
@@ -263,6 +270,8 @@ public class PlayActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 Toast.makeText(v.getContext(), "재생목록에서 제거되었습니다.", Toast.LENGTH_SHORT).show();
+                                                finish();
+                                                startActivity(getIntent());
                                             }
                                         });
                                 }
