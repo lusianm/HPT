@@ -158,9 +158,8 @@ public class TrainingActivity extends AppCompatActivity {
                     healthExplain.setText(webData[2]);
                 }
             });
-            //webData = Inputdata.split("\\|");
-
         }
+        Thread.currentThread().interrupt();
     }
 
     public void onButtonClicked(View view){

@@ -119,5 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         }
+
+        Thread.currentThread().interrupt();
     }
 }

@@ -164,6 +164,8 @@ public class PlayActivity extends AppCompatActivity {
                 }
             });
         }
+
+        Thread.currentThread().interrupt();
     }
 
     class PlayAdapter extends BaseAdapter {
@@ -258,22 +260,26 @@ public class PlayActivity extends AppCompatActivity {
                                         }
                                         output.append(line);
                                     }
-                                    if(output.toString().equals("!"))
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록에 존재하지 않는 운동입니다.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    else
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(v.getContext(), "재생목록에서 제거되었습니다.", Toast.LENGTH_SHORT).show();
-                                                finish();
-                                                startActivity(getIntent());
-                                            }
-                                        });
+                                    {
+                                        if (output.toString().equals("!"))
+                                            handler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(v.getContext(), "재생목록에 존재하지 않는 운동입니다.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        else
+                                            handler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(v.getContext(), "재생목록에서 제거되었습니다.", Toast.LENGTH_SHORT).show();
+                                                    finish();
+                                                    startActivity(getIntent());
+                                                }
+                                            });
+
+                                        Thread.currentThread().interrupt();
+                                    }
                                 }
                             } catch (Exception ex) {
                                 Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();

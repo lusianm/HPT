@@ -190,6 +190,7 @@ public class ListActivity extends AppCompatActivity {
                     }
                 });
             }
+            Thread.currentThread().interrupt();
     }
 
     class ListViewBtnAdapter extends BaseAdapter {

@@ -121,8 +121,15 @@ public class TrainingAddActivity extends AppCompatActivity {
             for (final String linedata : webData){
                 playlist.add(new PlaylistData(linedata));
             }
-            SetListAdapter();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SetListAdapter();
+                }
+            });
         }
+        Thread.currentThread().interrupt();
     }
 
     class TraininglistAdapter extends BaseAdapter {
@@ -204,6 +211,7 @@ public class TrainingAddActivity extends AppCompatActivity {
                                                 Toast.makeText(v.getContext(), "재생목록에 추가되었습니다.", Toast.LENGTH_SHORT).show();
                                             }
                                         });
+                                    Thread.currentThread().interrupt();
                                 }
                             } catch (Exception ex) {
                                 Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();

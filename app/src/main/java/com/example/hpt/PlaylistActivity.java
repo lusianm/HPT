@@ -102,6 +102,7 @@ public class PlaylistActivity extends AppCompatActivity {
                 public void run() {
                     Toast.makeText(getApplicationContext(),"잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
                     finish();
+                    Thread.currentThread().interrupt();
                 }
             });
         }
@@ -118,6 +119,8 @@ public class PlaylistActivity extends AppCompatActivity {
                 }
             });
         }
+
+        Thread.currentThread().interrupt();
     }
 
     class PlaylistAdapter extends BaseAdapter {
@@ -212,6 +215,8 @@ public class PlaylistActivity extends AppCompatActivity {
                                                 startActivity(intent);
                                             }
                                         });
+
+                                    Thread.currentThread().interrupt();
                                 }
                             } catch (Exception ex) {
                                 Toast.makeText(v.getContext(), "올바르지 않은 접근입니다.", Toast.LENGTH_SHORT).show();

@@ -117,6 +117,7 @@ public class SignUPActivity  extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(),"이미 존재하는 ID 입니다.", Toast.LENGTH_SHORT).show();
+                    Thread.currentThread().interrupt();
                 }
             });
         }
@@ -126,6 +127,7 @@ public class SignUPActivity  extends AppCompatActivity {
                 public void run() {
                     Toast.makeText(getApplicationContext(),"등록에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                     finish();
+                    Thread.currentThread().interrupt();
                 }
             });
 

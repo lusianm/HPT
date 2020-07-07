@@ -97,6 +97,7 @@ public class PlaylistAddActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"이미 추가된 재생목록입니다.", Toast.LENGTH_SHORT).show();
                 }
             });
+            Thread.currentThread().interrupt();
         }
         else {
             handler.post(new Runnable() {
@@ -109,6 +110,7 @@ public class PlaylistAddActivity extends AppCompatActivity {
             intent.putExtra("healthname", healthname);
             intent.putExtra("ID",userID);
             finish();
+            Thread.currentThread().interrupt();
             startActivity(intent);
         }
     }
