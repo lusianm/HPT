@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="목록에 추가"
+            android:text="목록삭제"
             android:background="@drawable/edge" />
 
 
