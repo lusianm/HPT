@@ -73,8 +73,18 @@ public class SignUPActivity  extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        requestServer((baseUrl + "AddUser/" + iDtxt.getText() + "/" + pWtxt.getText()+ "/" + nametxt.getText() + "/" + ageSelect.getSelectedItem().toString()  + "/" + genderSelect.getSelectedItem().toString() + "/"
+                        if(iDtxt.getText().length() != 0 && pWtxt.getText().length() != 0 && nametxt.getText().length() != 0 && jobtxt.getText().length() != 0 && heighttxt.getText().length() != 0 && weighttxt.getText().length() != 0)
+                            requestServer((baseUrl + "AddUser/" + iDtxt.getText() + "/" + pWtxt.getText()+ "/" + nametxt.getText() + "/" + ageSelect.getSelectedItem().toString()  + "/" + genderSelect.getSelectedItem().toString() + "/"
                                 + jobtxt.getText() + "/" + heighttxt.getText() + "/" + weighttxt.getText()));
+                        else {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "모든 항목을 기입해 주십시오.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 }).start();
             }
@@ -116,8 +126,7 @@ public class SignUPActivity  extends AppCompatActivity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),"이미 존재하는 ID 입니다.", Toast.LENGTH_SHORT).show();
-                    Thread.currentThread().interrupt();
+                    Toast.makeText(getApplicationContext(),"잘못된 정보입니다.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -127,11 +136,10 @@ public class SignUPActivity  extends AppCompatActivity {
                 public void run() {
                     Toast.makeText(getApplicationContext(),"등록에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                     finish();
-                    Thread.currentThread().interrupt();
                 }
             });
-
         }
+        Thread.currentThread().interrupt();
     }
 
 }

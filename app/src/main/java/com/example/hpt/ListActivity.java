@@ -67,6 +67,7 @@ public class ListActivity extends AppCompatActivity {
         this.InitializeData();
     }
 
+    //List View에 Adapter 할당
     public void SetListAdapter(){
         ListView listView = (ListView)findViewById(R.id.listview_list);
         final ListViewBtnAdapter myAdapter = new ListViewBtnAdapter(this,data);
@@ -74,6 +75,7 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
+    //Data 저장을 위한 ArrayList 생성 후, 서버로 요청 시작
     public void InitializeData()        {
         data = new ArrayList<TrainingData>();
         new Thread(new Runnable() {
@@ -179,10 +181,7 @@ public class ListActivity extends AppCompatActivity {
                         data.add(new TrainingData(R.drawable.pt16, ListData[0],ListData[1]));
                     }
                     else{}
-
-
                 }
-
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
