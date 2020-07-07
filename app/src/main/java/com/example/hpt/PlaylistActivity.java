@@ -88,14 +88,14 @@ public class PlaylistActivity extends AppCompatActivity {
                 conn.disconnect();
             }
         } catch (Exception ex) {
-            DataProcessing("\n"+"!\n");
+            DataProcessing("!");
         }
 
         DataProcessing(output.toString());
     }
 
     public void DataProcessing(final String Inputdata) {
-        String errorCheck = "\n" + "!\n";
+        String errorCheck = "!";
         if(Inputdata.equals(errorCheck)) {
             handler.post(new Runnable() {
                 @Override
