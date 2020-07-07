@@ -168,13 +168,20 @@ public class TrainingActivity extends AppCompatActivity {
         TextView healthExplain = findViewById(R.id.explain);
 
         if(healthnameView.getText().equals("팔 벌려 뛰기")) {
-            healthExplain.setText("차렷 자세에서 두 팔을 양옆으로 올리면서 두 발을 점프하며 벌린다.");
+
             Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://peaceful-goldstine-00360f.netlify.app/"));
             startActivity(intent2);
         }
         else if(healthnameView.getText().equals("런지")) {
-            healthExplain.setText("한쪽 발을 뒤쪽으로 뻗은 상태에서, 다른 쪽 발을 앞으로 내밀고 무릎을 굽혀 몸을 앞쪽으로 움직인다.");
             Intent intent3 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://blissful-hopper-df383b.netlify.app/"));
+            startActivity(intent3);
+        }
+        else if(healthnameView.getText().equals("내로우스쿼트")) {
+            Intent intent3 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://frosty-einstein-b1317b.netlify.app/"));
+            startActivity(intent3);
+        }
+        else if(healthnameView.getText().equals("와이드 스쿼트")) {
+            Intent intent3 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://frosty-einstein-b1317b.netlify.app/"));
             startActivity(intent3);
         }
         else{}
